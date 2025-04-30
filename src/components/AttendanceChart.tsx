@@ -1,7 +1,6 @@
 'use client';
 import Image from 'next/image';
 import { BarChart, Bar, Rectangle, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import 'react-calendar/dist/Calendar.css';
 const data = [
     {
       name: 'Mon',

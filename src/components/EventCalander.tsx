@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import Calendar from 'react-calendar';
-
+import 'react-calendar/dist/Calendar.css';
 const events = [
 {
     id:1,
