@@ -39,7 +39,7 @@ const AttendanceChart = () => {
             <Image src='/moreDark.png' alt='more-dark-icon' width={20} height={20} />
         </div>
         {/* CHART */}
-        <div className="">
+        <div className="h-[400px]">
         <ResponsiveContainer width="100%" height="90%">
         <BarChart
           width={500}
