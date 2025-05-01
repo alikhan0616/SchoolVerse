@@ -5,7 +5,7 @@ const Navbar = () => {
     <div className='flex items-center justify-between p-4'>
 
       {/* Search Bar */}
-      <div className="hidden md:flex items-center gap-2 rounded-full ring-[1.5px] ring-gray-400 px-2">
+      <div className="hidden md:flex text-xs items-center gap-2 rounded-full ring-[1.5px] ring-gray-400 px-2">
         <Image src='/search.png' alt="search-icon" height={14} width={14}/>
         <input className="focus:outline-none w-[200px] p-2 bg-transparent" type="text" placeholder="Search..." />
       </div>
