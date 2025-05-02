@@ -1,7 +1,22 @@
 import Pagination from "@/components/Pagination"
 import Table from "@/components/Table"
 import TableSearch from "@/components/TableSearch"
+import { role, teachersData } from "@/lib/data"
 import Image from "next/image"
+import Link from "next/link"
+
+
+type Teacher={
+  id:number,
+  teacherId:string,
+  name:string,
+  email?:string,
+  photo:string,
+  phone:string,
+  subjects:string[],
+  classes:string[],
+  address:string,
+}
 
 const columns = [
   {
@@ -40,6 +55,37 @@ const columns = [
 
 
 const TeacherListPage = () => {
+
+  const renderRow = (item:Teacher) => (
+    <tr key={item.id} className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-alipurple-light">
+    <td className="flex items-center gap-4 p-4">
+      <Image src={item.photo} width={40} height={40} alt="profile-icon" className="md:hidden xl:block h-10 w-10 rounded-full object-cover" />
+      <div className="flex flex-col">
+        <h3 className="font-semibold">{item.name}</h3>
+        <p className="text-xs text-gray-500">{item?.email}</p>
+      </div>
+    </td>
+    <td className="hidden md:table-cell">{item.teacherId}</td>
+    <td className="hidden md:table-cell">{item.subjects.join(",")}</td>
+    <td className="hidden md:table-cell">{item.classes.join(",")}</td>
+    <td className="hidden md:hidden lg:table-cell">{item.phone}</td>
+    <td className="hidden md:hidden lg:table-cell">{item.address}</td>
+    <td>
+      <div className="flex items-center gap-2">
+        <Link href={`/list/teachers/${item.id}`}>
+        <button className="flex items-center justify-center w-7 h-7 rounded-full bg-alisky">
+          <Image src='/view.png' alt='view-icon' width={16} height={16}></Image>
+        </button>
+        </Link>
+        {role === "admin" && (
+           <button className="flex items-center justify-center w-7 h-7 rounded-full bg-alipurple">
+           <Image src='/delete.png' alt='view-icon' width={16} height={16}></Image>
+         </button>
+        )}
+      </div>
+    </td>
+    </tr>
+  )
   return (
     <div className='bg-white flex-1 p-4 rounded-md m-4 mt-0'>
       {/* TOP SECTION */}
@@ -61,7 +107,7 @@ const TeacherListPage = () => {
         </div>
       </div>
       {/* LIST */}
-      <Table columns={columns}/>
+      <Table columns={columns} renderRow={renderRow} data={teachersData}/>
       {/* PAGINATION */}    
         <Pagination/>    
 
