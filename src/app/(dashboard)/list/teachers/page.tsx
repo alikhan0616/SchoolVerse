@@ -1,3 +1,4 @@
+import FormModel from "@/components/FormModel"
 import Pagination from "@/components/Pagination"
 import Table from "@/components/Table"
 import TableSearch from "@/components/TableSearch"
@@ -78,9 +79,11 @@ const TeacherListPage = () => {
         </button>
         </Link >
         {role === "admin" && (
-           <button className="flex cursor-pointer items-center justify-center w-7 h-7 rounded-full bg-alipurple">
-           <Image src='/delete.png' alt='view-icon' width={16} height={16}></Image>
-         </button>
+        //    <button className="flex cursor-pointer items-center justify-center w-7 h-7 rounded-full bg-alipurple">
+        //    <Image src='/delete.png' alt='view-icon' width={16} height={16}></Image>
+        //  </button>
+        <FormModel table="teacher" type="delete" id={item.id} />
+        
         )}
       </div>
     </td>
@@ -101,9 +104,10 @@ const TeacherListPage = () => {
               <Image src='/sort.png' alt="filter-icon" height={14} width={14} />
             </button>
             {role === 'admin' && (
-              <button className="w-8 h-8 flex justify-center items-center bg-aliyellow rounded-full">
-              <Image src='/plus.png' alt="filter-icon" height={14} width={14} />
-            </button>
+            //   <button className="w-8 h-8 flex justify-center items-center bg-aliyellow rounded-full">
+            //   <Image src='/plus.png' alt="filter-icon" height={14} width={14} />
+            // </button>
+            <FormModel table="teacher" type="create" />
             )}
           </div>
         </div>
