@@ -73,12 +73,12 @@ const TeacherListPage = () => {
     <td>
       <div className="flex items-center gap-2">
         <Link href={`/list/teachers/${item.id}`}>
-        <button className="flex items-center justify-center w-7 h-7 rounded-full bg-alisky">
+        <button className="flex cursor-pointer cursor-p items-center justify-center w-7 h-7 rounded-full bg-alisky">
           <Image src='/view.png' alt='view-icon' width={16} height={16}></Image>
         </button>
-        </Link>
+        </Link >
         {role === "admin" && (
-           <button className="flex items-center justify-center w-7 h-7 rounded-full bg-alipurple">
+           <button className="flex cursor-pointer items-center justify-center w-7 h-7 rounded-full bg-alipurple">
            <Image src='/delete.png' alt='view-icon' width={16} height={16}></Image>
          </button>
         )}
