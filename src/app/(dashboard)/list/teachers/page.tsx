@@ -4,8 +4,8 @@ import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { role } from "@/lib/data";
 import { prisma } from "@/lib/prisma";
-import { ITEMS_PER_AGE } from "@/lib/settings";
-import { Class, Subject, Teacher } from "@prisma/client";
+import { ITEMS_PER_PAGE } from "@/lib/settings";
+import { Class, Prisma, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -90,7 +90,7 @@ const renderRow = (item: TeacherList) => (
           //    <button className="flex cursor-pointer items-center justify-center w-7 h-7 rounded-full bg-alipurple">
           //    <Image src='/delete.png' alt='view-icon' width={16} height={16}></Image>
           //  </button>
-          <FormModel table="teacher" type="delete" id={parseInt(item.id)} />
+          <FormModel table="teacher" type="delete" id={item.id} />
         )}
       </div>
     </td>
@@ -103,16 +103,44 @@ const TeacherListPage = async ({
 }) => {
   const { page, ...queryParams } = searchParams;
   const p = page ? parseInt(page) : 1;
+
+  // URL PARAMS CONDTIONS/RULES
+
+  const query: Prisma.TeacherWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "classId":
+            query.lessons = {
+              some: {
+                classId: parseInt(value),
+              },
+            };
+            break;
+          case "search":
+            query.name = { contains: value, mode: "insensitive" };
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
   const [data, count] = await prisma.$transaction([
     prisma.teacher.findMany({
+      where: query,
       include: {
         subjects: true,
         classes: true,
       },
-      take: ITEMS_PER_AGE,
-      skip: ITEMS_PER_AGE * (p - 1),
+      take: ITEMS_PER_PAGE,
+      skip: ITEMS_PER_PAGE * (p - 1),
     }),
-    prisma.teacher.count(),
+    prisma.teacher.count({
+      where: query,
+    }),
   ]);
   return (
     <div className="bg-white flex-1 p-4 rounded-md m-4 mt-0">

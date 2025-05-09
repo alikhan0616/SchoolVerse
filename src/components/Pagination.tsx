@@ -1,12 +1,12 @@
 "use client";
-import { ITEMS_PER_AGE } from "@/lib/settings";
+import { ITEMS_PER_PAGE } from "@/lib/settings";
 import { useRouter } from "next/navigation";
 
 const Pagination = ({ page, count }: { page: number; count: number }) => {
   const router = useRouter();
 
-  const hasPrev = ITEMS_PER_AGE * (page - 1) > 0;
-  const hasNext = ITEMS_PER_AGE * (page - 1) + ITEMS_PER_AGE < count;
+  const hasPrev = ITEMS_PER_PAGE * (page - 1) > 0;
+  const hasNext = ITEMS_PER_PAGE * (page - 1) + ITEMS_PER_PAGE < count;
 
   const changePage = (newPage: number) => {
     const params = new URLSearchParams(window.location.search);
@@ -26,7 +26,7 @@ const Pagination = ({ page, count }: { page: number; count: number }) => {
       {/* PAGINATION BUTTONS */}
       <div className="flex items-center gap-2 text-sm">
         {Array.from(
-          { length: Math.ceil(count / ITEMS_PER_AGE) },
+          { length: Math.ceil(count / ITEMS_PER_PAGE) },
           (_, index) => {
             const pageIndex = index + 1;
             return (

@@ -1,1 +1,1 @@
-export const ITEMS_PER_AGE = 5;
+export const ITEMS_PER_PAGE = 10;
