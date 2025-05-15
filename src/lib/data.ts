@@ -915,7 +915,6 @@ export const announcementsData = [
   },
 ];
 
-
 // YOU SHOULD CHANGE THE DATES OF THE EVENTS TO THE CURRENT DATE TO SEE THE EVENTS ON THE CALENDAR
 export const calendarEvents = [
   // Tuesday, April 29, 2025 (maps to Aug 12, Tuesday)
