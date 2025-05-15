@@ -86,7 +86,7 @@ const EventListPage = async ({
       accessor: "endTime",
       className: "hidden md:table-cell",
     },
-    ...(role == "admin"
+    ...(role === "admin"
       ? [
           {
             header: "Actions",

@@ -116,7 +116,7 @@ const ExamListPage = async ({
       accessor: "date",
       className: "hidden md:table-cell",
     },
-    ...(role == "admin" || role === "teacher"
+    ...(role === "admin" || role === "teacher"
       ? [
           {
             header: "Actions",
