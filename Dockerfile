@@ -13,8 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Generate Database
-RUN npx prisma migrate dev --name init
+# Generate Prisma client (but don't run migrations during build)
+RUN npx prisma generate
 
 # Build the Next.js application
 RUN npm run build
@@ -22,5 +22,9 @@ RUN npm run build
 # Expose the port the app runs on
 EXPOSE 3000
 
+# Create a script to run migrations and start the app
+RUN echo '#!/bin/sh\nnpx prisma migrate deploy\nnpm start' > /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Start the Next.js application
-CMD ["npm", "start"]
+CMD ["/app/start.sh"]
