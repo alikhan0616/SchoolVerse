@@ -188,31 +188,31 @@ const SingleTeacherPage = async ({
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
             <Link
               className="p-3 rounded-md bg-alisky-light"
-              href={`/list/classes?supervisorId=${"teacher10"}`}
+              href={`/list/classes?supervisorId=${teacher.id}`}
             >
               Teacher&apos;s Classes
             </Link>
             <Link
-              href={`/list/students?teacherId=${"teacher10"}`}
+              href={`/list/students?teacherId=${teacher.id}`}
               className="p-3 rounded-md bg-alipurple-light"
             >
               Teacher&apos;s Students
             </Link>
             <Link
               className="p-3 rounded-md bg-aliyellow-light"
-              href={`/list/lessons?teacherId=${"teacher10"}`}
+              href={`/list/lessons?teacherId=${teacher.id}`}
             >
               Teacher&apos;s Lessons
             </Link>
             <Link
               className="p-3 rounded-md bg-pink-50"
-              href={`/list/exams?teacherId=${"teacher10"}`}
+              href={`/list/exams?teacherId=${teacher.id}`}
             >
               Teacher&apos;s Exams
             </Link>
             <Link
               className="p-3 rounded-md bg-alisky-light"
-              href={`/list/assignments?teacherId=${"teacher10"}`}
+              href={`/list/assignments?teacherId=${teacher.id}`}
             >
               Teacher&apos;s Assignemnts
             </Link>
