@@ -1,5 +1,5 @@
 # Use Node.js as the base image
-FROM node:22
+FROM node:18
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -13,18 +13,11 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Generate Prisma client (but don't run migrations during build)
-RUN npx prisma generate
-
 # Build the Next.js application
 RUN npm run build
 
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Create a script to run migrations and start the app
-RUN echo '#!/bin/sh\nnpx prisma migrate deploy\nnpm start' > /app/start.sh
-RUN chmod +x /app/start.sh
-
-# Start the Next.js application
-CMD ["/app/start.sh"]
+# Apply Prisma migrations and start the Next.js application
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
