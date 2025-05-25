@@ -1,23 +1,22 @@
-# Use Node.js as the base image
 FROM node:18
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json files
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
 COPY . .
 
-# Build the Next.js application
+# Accept build args for env vars needed at build time
+ARG DATABASE_URL
+ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+
+# Set them as env vars for build
+ENV DATABASE_URL=$DATABASE_URL
+ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+
 RUN npm run build
 
-# Expose the port the app runs on
 EXPOSE 3000
 
-# Apply Prisma migrations, seed the database, and start the Next.js application
 CMD npx prisma migrate deploy && npx prisma db seed && npm start
