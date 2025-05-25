@@ -24,6 +24,11 @@ async function cleanup() {
 async function main() {
   try {
     await cleanup();
+
+    const createdGrades = [];
+    const createdClasses = [];
+    const createdSubjects = [];
+
     // ADMIN
     await prisma.admin.create({
       data: {
@@ -39,22 +44,23 @@ async function main() {
     });
 
     // GRADE
-    const createdGrades = [];
     for (let i = 1; i <= 6; i++) {
       const grade = await prisma.grade.create({
         data: { level: i },
       });
       createdGrades.push(grade);
     }
+
     // CLASS
     for (let i = 1; i <= 6; i++) {
-      await prisma.class.create({
+      const class_ = await prisma.class.create({
         data: {
           name: `${i}A`,
-          gradeId: createdGrades[i - 1].id, // Use the actual ID
+          gradeId: createdGrades[i - 1].id,
           capacity: Math.floor(Math.random() * (20 - 15 + 1)) + 15,
         },
       });
+      createdClasses.push(class_);
     }
 
     // SUBJECT
@@ -72,14 +78,15 @@ async function main() {
     ];
 
     for (const subject of subjectData) {
-      await prisma.subject.create({ data: subject });
+      const created = await prisma.subject.create({ data: subject });
+      createdSubjects.push(created);
     }
 
     // TEACHER
     for (let i = 1; i <= 15; i++) {
       await prisma.teacher.create({
         data: {
-          id: `teacher${i}`, // Unique ID for the teacher
+          id: `teacher${i}`,
           username: `teacher${i}`,
           name: `TName${i}`,
           surname: `TSurname${i}`,
@@ -88,8 +95,20 @@ async function main() {
           address: `Address${i}`,
           bloodType: "A+",
           sex: i % 2 === 0 ? UserSex.MALE : UserSex.FEMALE,
-          subjects: { connect: [{ id: (i % 10) + 1 }] },
-          classes: { connect: [{ id: (i % 6) + 1 }] },
+          subjects: {
+            connect: [
+              {
+                id: createdSubjects[i % createdSubjects.length].id,
+              },
+            ],
+          },
+          classes: {
+            connect: [
+              {
+                id: createdClasses[i % createdClasses.length].id,
+              },
+            ],
+          },
           birthday: new Date(
             new Date().setFullYear(new Date().getFullYear() - 30)
           ),
