@@ -19,5 +19,5 @@ RUN npm run build
 # Expose the port the app runs on
 EXPOSE 3000
 
-# Apply Prisma migrations and start the Next.js application
-CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
+# Apply Prisma migrations, seed the database, and start the Next.js application
+CMD npx prisma migrate deploy && npx prisma db seed && npm start
