@@ -39,20 +39,19 @@ async function main() {
     });
 
     // GRADE
+    const createdGrades = [];
     for (let i = 1; i <= 6; i++) {
-      await prisma.grade.create({
-        data: {
-          level: i,
-        },
+      const grade = await prisma.grade.create({
+        data: { level: i },
       });
+      createdGrades.push(grade);
     }
-
     // CLASS
     for (let i = 1; i <= 6; i++) {
       await prisma.class.create({
         data: {
           name: `${i}A`,
-          gradeId: i,
+          gradeId: createdGrades[i - 1].id, // Use the actual ID
           capacity: Math.floor(Math.random() * (20 - 15 + 1)) + 15,
         },
       });
