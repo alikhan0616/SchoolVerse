@@ -19,4 +19,5 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD npx prisma migrate deploy && npx prisma db seed && npm start
+# Run migrations and start the application
+CMD npx prisma migrate deploy && npm start
