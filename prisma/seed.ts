@@ -128,9 +128,9 @@ async function main() {
           ],
           startTime: new Date(new Date().setHours(new Date().getHours() + 1)),
           endTime: new Date(new Date().setHours(new Date().getHours() + 3)),
-          subjectId: (i % 10) + 1,
-          classId: (i % 6) + 1,
-          teacherId: `teacher${(i % 15) + 1}`,
+          subjectId: createdSubjects[i % createdSubjects.length].id, // Corrected
+          classId: createdClasses[i % createdClasses.length].id, // Corrected
+          teacherId: `teacher${(i % 15) + 1}`, // Corrected
         },
       });
     }
