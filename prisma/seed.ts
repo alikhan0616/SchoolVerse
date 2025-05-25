@@ -21,6 +21,7 @@ async function cleanup() {
   ]);
   console.log("Existing data cleaned successfully");
 }
+
 async function main() {
   try {
     await cleanup();
@@ -28,22 +29,20 @@ async function main() {
     const createdGrades = [];
     const createdClasses = [];
     const createdSubjects = [];
+    const createdParents = [];
+    const createdStudents = [];
 
     // ADMIN
+    console.log("Creating admins...");
     await prisma.admin.create({
-      data: {
-        id: "admin1",
-        username: "admin1",
-      },
+      data: { id: "admin1", username: "admin1" },
     });
     await prisma.admin.create({
-      data: {
-        id: "admin2",
-        username: "admin2",
-      },
+      data: { id: "admin2", username: "admin2" },
     });
 
     // GRADE
+    console.log("Creating grades...");
     for (let i = 1; i <= 6; i++) {
       const grade = await prisma.grade.create({
         data: { level: i },
@@ -52,6 +51,7 @@ async function main() {
     }
 
     // CLASS
+    console.log("Creating classes...");
     for (let i = 1; i <= 6; i++) {
       const class_ = await prisma.class.create({
         data: {
@@ -64,6 +64,7 @@ async function main() {
     }
 
     // SUBJECT
+    console.log("Creating subjects...");
     const subjectData = [
       { name: "Mathematics" },
       { name: "Science" },
@@ -83,6 +84,7 @@ async function main() {
     }
 
     // TEACHER
+    console.log("Creating teachers...");
     for (let i = 1; i <= 15; i++) {
       await prisma.teacher.create({
         data: {
@@ -117,6 +119,7 @@ async function main() {
     }
 
     // LESSON
+    console.log("Creating lessons...");
     for (let i = 1; i <= 30; i++) {
       await prisma.lesson.create({
         data: {
@@ -128,16 +131,17 @@ async function main() {
           ],
           startTime: new Date(new Date().setHours(new Date().getHours() + 1)),
           endTime: new Date(new Date().setHours(new Date().getHours() + 3)),
-          subjectId: createdSubjects[i % createdSubjects.length].id, // Corrected
-          classId: createdClasses[i % createdClasses.length].id, // Corrected
-          teacherId: `teacher${(i % 15) + 1}`, // Corrected
+          subjectId: createdSubjects[i % createdSubjects.length].id,
+          classId: createdClasses[i % createdClasses.length].id,
+          teacherId: `teacher${(i % 15) + 1}`,
         },
       });
     }
 
     // PARENT
+    console.log("Creating parents...");
     for (let i = 1; i <= 25; i++) {
-      await prisma.parent.create({
+      const parent = await prisma.parent.create({
         data: {
           id: `parentId${i}`,
           username: `parentId${i}`,
@@ -148,11 +152,13 @@ async function main() {
           address: `Address${i}`,
         },
       });
+      createdParents.push(parent);
     }
 
     // STUDENT
+    console.log("Creating students...");
     for (let i = 1; i <= 50; i++) {
-      await prisma.student.create({
+      const student = await prisma.student.create({
         data: {
           id: `student${i}`,
           username: `student${i}`,
@@ -163,64 +169,70 @@ async function main() {
           address: `Address${i}`,
           bloodType: "O-",
           sex: i % 2 === 0 ? UserSex.MALE : UserSex.FEMALE,
-          parentId: `parentId${Math.ceil(i / 2) % 25 || 25}`,
-          gradeId: (i % 6) + 1,
-          classId: (i % 6) + 1,
+          parentId: createdParents[Math.floor((i - 1) / 2)].id,
+          gradeId: createdGrades[i % createdGrades.length].id,
+          classId: createdClasses[i % createdClasses.length].id,
           birthday: new Date(
             new Date().setFullYear(new Date().getFullYear() - 10)
           ),
         },
       });
+      createdStudents.push(student);
     }
 
     // EXAM
+    console.log("Creating exams...");
     for (let i = 1; i <= 10; i++) {
       await prisma.exam.create({
         data: {
           title: `Exam ${i}`,
           startTime: new Date(new Date().setHours(new Date().getHours() + 1)),
           endTime: new Date(new Date().setHours(new Date().getHours() + 2)),
-          lessonId: (i % 30) + 1,
+          lessonId: i % 30,
         },
       });
     }
 
     // ASSIGNMENT
+    console.log("Creating assignments...");
     for (let i = 1; i <= 10; i++) {
       await prisma.assignment.create({
         data: {
           title: `Assignment ${i}`,
           startDate: new Date(new Date().setHours(new Date().getHours() + 1)),
           dueDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-          lessonId: (i % 30) + 1,
+          lessonId: i % 30,
         },
       });
     }
 
     // RESULT
+    console.log("Creating results...");
     for (let i = 1; i <= 10; i++) {
       await prisma.result.create({
         data: {
           score: 90,
-          studentId: `student${i}`,
+          studentId: createdStudents[i - 1].id,
           ...(i <= 5 ? { examId: i } : { assignmentId: i - 5 }),
         },
       });
     }
 
     // ATTENDANCE
+    console.log("Creating attendance...");
     for (let i = 1; i <= 10; i++) {
       await prisma.attendance.create({
         data: {
           date: new Date(),
           present: true,
-          studentId: `student${i}`,
-          lessonId: (i % 30) + 1,
+          studentId: createdStudents[i - 1].id,
+          lessonId: i % 30,
         },
       });
     }
 
     // EVENT
+    console.log("Creating events...");
     for (let i = 1; i <= 5; i++) {
       await prisma.event.create({
         data: {
@@ -228,25 +240,25 @@ async function main() {
           description: `Description for Event ${i}`,
           startTime: new Date(new Date().setHours(new Date().getHours() + 1)),
           endTime: new Date(new Date().setHours(new Date().getHours() + 2)),
-          classId: (i % 5) + 1,
+          classId: createdClasses[i % createdClasses.length].id,
         },
       });
     }
 
     // ANNOUNCEMENT
+    console.log("Creating announcements...");
     for (let i = 1; i <= 5; i++) {
       await prisma.announcement.create({
         data: {
           title: `Announcement ${i}`,
           description: `Description for Announcement ${i}`,
           date: new Date(),
-          classId: (i % 5) + 1,
+          classId: createdClasses[i % createdClasses.length].id,
         },
       });
     }
 
     console.log("Seeding completed successfully.");
-    return true;
   } catch (error) {
     console.error("Error during seeding:", error);
     throw error;
