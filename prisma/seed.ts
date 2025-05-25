@@ -31,6 +31,9 @@ async function main() {
     const createdSubjects = [];
     const createdParents = [];
     const createdStudents = [];
+    const createdLessons = [];
+    const createdExams = [];
+    const createdAssignments = [];
 
     // ADMIN
     console.log("Creating admins...");
@@ -121,7 +124,7 @@ async function main() {
     // LESSON
     console.log("Creating lessons...");
     for (let i = 1; i <= 30; i++) {
-      await prisma.lesson.create({
+      const lesson = await prisma.lesson.create({
         data: {
           name: `Lesson${i}`,
           day: Day[
@@ -136,8 +139,8 @@ async function main() {
           teacherId: `teacher${(i % 15) + 1}`,
         },
       });
+      createdLessons.push(lesson);
     }
-
     // PARENT
     console.log("Creating parents...");
     for (let i = 1; i <= 25; i++) {
@@ -183,27 +186,29 @@ async function main() {
     // EXAM
     console.log("Creating exams...");
     for (let i = 1; i <= 10; i++) {
-      await prisma.exam.create({
+      const exam = await prisma.exam.create({
         data: {
           title: `Exam ${i}`,
           startTime: new Date(new Date().setHours(new Date().getHours() + 1)),
           endTime: new Date(new Date().setHours(new Date().getHours() + 2)),
-          lessonId: i % 30,
+          lessonId: createdLessons[i % createdLessons.length].id,
         },
       });
+      createdExams.push(exam);
     }
 
     // ASSIGNMENT
     console.log("Creating assignments...");
     for (let i = 1; i <= 10; i++) {
-      await prisma.assignment.create({
+      const assignment = await prisma.assignment.create({
         data: {
           title: `Assignment ${i}`,
           startDate: new Date(new Date().setHours(new Date().getHours() + 1)),
           dueDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-          lessonId: i % 30,
+          lessonId: createdLessons[i % createdLessons.length].id,
         },
       });
+      createdAssignments.push(assignment);
     }
 
     // RESULT
@@ -213,7 +218,9 @@ async function main() {
         data: {
           score: 90,
           studentId: createdStudents[i - 1].id,
-          ...(i <= 5 ? { examId: i } : { assignmentId: i - 5 }),
+          ...(i <= 5
+            ? { examId: createdExams[i - 1].id }
+            : { assignmentId: createdAssignments[i - 6].id }),
         },
       });
     }
@@ -226,7 +233,7 @@ async function main() {
           date: new Date(),
           present: true,
           studentId: createdStudents[i - 1].id,
-          lessonId: i % 30,
+          lessonId: createdLessons[i % createdLessons.length].id,
         },
       });
     }
@@ -257,7 +264,6 @@ async function main() {
         },
       });
     }
-
     console.log("Seeding completed successfully.");
   } catch (error) {
     console.error("Error during seeding:", error);
